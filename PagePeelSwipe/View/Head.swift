@@ -9,8 +9,7 @@
 
 import SwiftUI
 
-// Sample Model For Displaying Movie Posters
-
+/// Sample Model For Displaying Movie Posters
 struct Head: View {
     @State private var images: [PosterModel] = []
     
@@ -21,14 +20,14 @@ struct Head: View {
                     PeelEffect {
                         CardView(image)
                     } onDelete: {
-                          
+                        
                     }
                 }
             }
             .padding(15)
         }
         .onAppear {
-            for index in 1...6 {
+            for index in 1...5 {
                 images.append(.init(assetName: "movie \(index)"))
             }
         }
@@ -45,7 +44,7 @@ struct Head: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(width: size.width, height: size.height)
-                    .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+                    .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
             }
         }
         .frame(height: 250)
@@ -58,7 +57,6 @@ struct Head: View {
 }
 
 /// Sample Model For Displaying Movie Posters
-
 struct PosterModel: Identifiable {
     var id: UUID = .init()
     var assetName: String

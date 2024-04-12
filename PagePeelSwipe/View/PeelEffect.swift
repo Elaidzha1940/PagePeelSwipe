@@ -21,7 +21,7 @@ struct PeelEffect<Content: View>: View {
         self.onDelete = onDelete
     }
     /// View Properties
-    @State private var dragProgress: CGFloat = 0
+    @State private var dragProgress: CGFloat = .zero
     var body: some View {
         VStack {
             content
@@ -46,7 +46,16 @@ struct PeelEffect<Content: View>: View {
                         content
                         /// Flipping Horizontally for Upside Image
                             .scaleEffect(x: -1)
-                            .offset(x: size.width)
+                        
+                        /// Moving Along Side While Dragging
+                            .offset(x: size.width - (size.width * dragProgress))
+                            .offset(x: size.width * -dragProgress)
+                        
+                        /// Masking Overlayed Image For Removing Outbound Visibility
+                            .mask {
+                                Rectangle()
+                                    .offset(x: size.width * -dragProgress)
+                            }
                             .contentShape(Rectangle())
                             .gesture(
                                 DragGesture()
@@ -62,12 +71,23 @@ struct PeelEffect<Content: View>: View {
                                     .onEnded({ value in
                                         /// Smooth Ending Animation
                                         withAnimation(.spring(response: 0.6, dampingFraction: 0.7, blendDuration: 0.7)) {
-                                            dragProgress = 0 // Changed from .zero to 0
+                                            dragProgress = .zero // Changed from .zero to 0
                                         }
                                     })
                             )
                     }
                 }
+                .background(
+                    RoundedRectangle(cornerRadius: 30, style: .continuous)
+                        .fill(.red.gradient)
+                        .overlay(alignment: .trailing) {
+                            Image(systemName: "trash")
+                                .font(.system(size: 25, weight: .semibold, design: .rounded))
+                                .padding(.trailing, 20)
+                                .foregroundStyle(.white)
+                        }
+                        .padding(8)
+                )
         }
     }
 }

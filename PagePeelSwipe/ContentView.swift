@@ -22,17 +22,3 @@ struct ContentView: View {
     ContentView()
 }
 
-//struct ContentView: View {
-//    @StateObject var vm = ViewModel()
-//    
-//    var body: some View {
-//        NavigationView {
-//            View1(vm: vm)
-//                .navigationTitle("View 1")
-//        }
-//    }
-//}
-//
-//#Preview {
-//    ContentView()
-//}
