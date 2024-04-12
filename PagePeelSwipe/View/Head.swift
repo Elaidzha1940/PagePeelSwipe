@@ -17,13 +17,15 @@ struct Head: View {
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
             VStack(spacing: 15) {
-                
+                ForEach(images) {
+                    CardView($0)
+                }
             }
             .padding(15)
         }
         .onAppear {
             for index in 1...6 {
-                images.append(.init(assetName: "Pic \(index)"))
+                images.append(.init(assetName: "movie \(index)"))
             }
         }
     }
@@ -31,7 +33,19 @@ struct Head: View {
     /// Card View
     @ViewBuilder
     func CardView(_ posterModel: PosterModel) -> some View {
-        
+        GeometryReader {
+            let size = $0.size
+            
+            ZStack {
+                Image(posterModel.assetName)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: size.width, height: size.height)
+                    .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+            }
+        }
+        .frame(height: 250)
+        .contentShape(Rectangle())
     }
 }
 
