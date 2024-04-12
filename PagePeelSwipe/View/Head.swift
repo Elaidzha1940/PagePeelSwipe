@@ -17,8 +17,12 @@ struct Head: View {
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
             VStack(spacing: 15) {
-                ForEach(images) {
-                    CardView($0)
+                ForEach(images) { image in
+                    PeelEffect {
+                        CardView(image)
+                    } onDelete: {
+                          
+                    }
                 }
             }
             .padding(15)
