@@ -44,7 +44,7 @@ struct PeelEffect<Content: View>: View {
                         let size = $0.size
                         
                         content
-                        /// Making it Look Like It's Rolling 
+                        /// Making it Look Like It's Rolling
                             .shadow(color: .black.opacity(dragProgress != 0 ? 0.1 : 0), radius: 5, x: 15, y: 0)
                             .overlay {
                                 Rectangle()
@@ -85,7 +85,22 @@ struct PeelEffect<Content: View>: View {
                             )
                     }
                 }
-                .background(
+            /// Background Shadow
+                .background {
+                    GeometryReader {
+                        let rect = $0.frame(in: .global)
+                        
+                        Rectangle()
+                            .fill(.black)
+                            .shadow(color: .black.opacity(0.3), radius: 15, x: 30, y: 0)
+                        
+                        /// Moving Alomg Side While Dragging
+                            .padding(.tr)
+                    }
+                    .mask(content)
+                }
+            
+                .background {
                     RoundedRectangle(cornerRadius: 30, style: .continuous)
                         .fill(.red.gradient)
                         .overlay(alignment: .trailing) {
@@ -95,7 +110,7 @@ struct PeelEffect<Content: View>: View {
                                 .foregroundStyle(.white)
                         }
                         .padding(8)
-                )
+                }
         }
     }
 }
