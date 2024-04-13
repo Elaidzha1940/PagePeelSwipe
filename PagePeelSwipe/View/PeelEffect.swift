@@ -25,23 +25,80 @@ struct PeelEffect<Content: View>: View {
     var body: some View {
         VStack {
             content
-            /// Masking Original Content
-                .mask {
+                .hidden()
+                .overlay {
                     GeometryReader {
                         let rect = $0.frame(in: .global)
                         let size = $0.size
                         
-                        Rectangle()
-                        /// Swipe: Right to Left
-                        /// This Masking from Right to Left  (Trailing)
-                            .padding(.trailing, dragProgress * rect.width)
+                        /// Replace  it as Background View
+                        RoundedRectangle(cornerRadius: 30, style: .continuous)
+                            .fill(.red.gradient)
+                            .overlay(alignment: .trailing) {
+                                Button {
+                                    print("tap")
+                                } label: {
+                                    Image(systemName: "trash")
+                                        .font(.system(size: 25, weight: .semibold, design: .rounded))
+                                        .padding(.trailing, 20)
+                                        .foregroundStyle(.white)
+                                        .contentShape(Rectangle())
+                                }
+                                .disabled(dragProgress < 0.6)
+                                
+                            }
+                            .padding(.vertical, 8)
+                            .contentShape(Rectangle())
+                            .gesture(
+                                DragGesture()
+                                    .onChanged({ value in
+                                        /// Right to Left Swipe: Negative Value
+                                        var translationX = value.translation.width
+                                        /// Limiting to Max Zero
+                                        translationX = max(-translationX, 0)
+                                        /// Converting Translation Into Progress  (0 - 1)
+                                        let progress = min(1, translationX / rect.width)
+                                        dragProgress = progress
+                                    })
+                                    .onEnded({ value in
+                                        /// Smooth Ending Animation
+                                        withAnimation(.spring(response: 0.6, dampingFraction: 0.7, blendDuration: 0.7)) {
+                                            if dragProgress > 0.25 {
+                                                dragProgress = 0.6
+                                            } else {
+                                                dragProgress = .zero
+                                            }
+                                        }
+                                    })
+                            )
                         
+                        content
+                            .mask {
+                                Rectangle()
+                                /// Masking Original Content
+                                /// Swipe: Right to Left
+                                /// This Masking from Right to Left  (Trailing)
+                                    .padding(.trailing, dragProgress * rect.width)
+                            }
+                        /// Disable Interaction
+                            .allowsHitTesting(false)
                     }
+                    /// Shadow
+                    
+                    Rectangle()
+                        .fill(.black)
+                        .padding(.vertical, 23)
+                        .shadow(color: .black.opacity(0.3), radius: 15, x: 30, y: 0)
+                    
+                    /// Moving Alomg Side While Dragging
+                        .padding(.trailing, rect.width * dragProgress)
                 }
                 .overlay {
                     GeometryReader {
                         let rect = $0.frame(in: .global)
                         let size = $0.size
+                        let minOpacity = dragProgress / 0.5
+                        let opacity = min(1, minOpacity)
                         
                         content
                         /// Making it Look Like It's Rolling
@@ -64,9 +121,10 @@ struct PeelEffect<Content: View>: View {
                                     )
                                     .frame(width: 60)
                                     .offset(x: 40)
+                                    .offset(x: -30 + (30 * opacity))
+                                
                                 /// Moving Alomg Side While Dragging
                                     .offset(x: size.width * -dragProgress)
-
                             }
                         
                         /// Flipping Horizontally for Upside Image
@@ -81,54 +139,19 @@ struct PeelEffect<Content: View>: View {
                                 Rectangle()
                                     .offset(x: size.width * -dragProgress)
                             }
-                            .contentShape(Rectangle())
-                            .gesture(
-                                DragGesture()
-                                    .onChanged({ value in
-                                        /// Right to Left Swipe: Negative Value
-                                        var translationX = value.translation.width
-                                        /// Limiting to Max Zero
-                                        translationX = max(-translationX, 0)
-                                        /// Converting Translation Into Progress  (0 - 1)
-                                        let progress = min(1, translationX / size.width)
-                                        dragProgress = progress
-                                    })
-                                    .onEnded({ value in
-                                        /// Smooth Ending Animation
-                                        withAnimation(.spring(response: 0.6, dampingFraction: 0.7, blendDuration: 0.7)) {
-                                            dragProgress = .zero // Changed from .zero to 0
-                                        }
-                                    })
-                            )
+                           
                     }
+                    /// Disable Interaction
+                    .allowsHitTesting(false)
                 }
-            /// Background Shadow
-                .background {
-                    GeometryReader {
-                        let rect = $0.frame(in: .global)
-                        
-                        Rectangle()
-                            .fill(.black)
-                            .padding(.vertical, 23)
-                            .shadow(color: .black.opacity(0.3), radius: 15, x: 30, y: 0)
-                        
-                        /// Moving Alomg Side While Dragging
-                            .padding(.trailing, rect.width * dragProgress)
-                    }
-                    .mask(content)
-                }
-            
-                .background {
-                    RoundedRectangle(cornerRadius: 30, style: .continuous)
-                        .fill(.red.gradient)
-                        .overlay(alignment: .trailing) {
-                            Image(systemName: "trash")
-                                .font(.system(size: 25, weight: .semibold, design: .rounded))
-                                .padding(.trailing, 20)
-                                .foregroundStyle(.white)
-                        }
-                        .padding(.vertical, 8)
-                }
+//            /// Background Shadow
+//                .background {
+//                    GeometryReader {
+//                        let rect = $0.frame(in: .global)
+//                    
+//                    }
+//                    .mask(content)
+//                }
         }
     }
 }
