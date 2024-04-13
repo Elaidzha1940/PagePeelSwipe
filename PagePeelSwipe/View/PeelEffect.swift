@@ -22,6 +22,8 @@ struct PeelEffect<Content: View>: View {
     }
     /// View Properties
     @State private var dragProgress: CGFloat = .zero
+    @State private var isExpanded: Bool = false
+    
     var body: some View {
         VStack {
             content
@@ -36,7 +38,7 @@ struct PeelEffect<Content: View>: View {
                             .fill(.red.gradient)
                             .overlay(alignment: .trailing) {
                                 Button {
-                                    print("tap")
+                                    onDelete()
                                 } label: {
                                     Image(systemName: "trash")
                                         .font(.system(size: 25, weight: .semibold, design: .rounded))
@@ -44,14 +46,16 @@ struct PeelEffect<Content: View>: View {
                                         .foregroundStyle(.white)
                                         .contentShape(Rectangle())
                                 }
-                                .disabled(dragProgress < 0.6)
-                                
+                                .disabled(!isExpanded)
                             }
                             .padding(.vertical, 8)
                             .contentShape(Rectangle())
                             .gesture(
                                 DragGesture()
                                     .onChanged({ value in
+                                        /// Disabiling Gesture When it's Expanded
+                                        guard !isExpanded else { return }
+                                        
                                         /// Right to Left Swipe: Negative Value
                                         var translationX = value.translation.width
                                         /// Limiting to Max Zero
@@ -61,16 +65,41 @@ struct PeelEffect<Content: View>: View {
                                         dragProgress = progress
                                     })
                                     .onEnded({ value in
+                                        /// Disabiling Gesture When it's Expanded
+                                        guard !isExpanded else { return }
+                                        
                                         /// Smooth Ending Animation
                                         withAnimation(.spring(response: 0.6, dampingFraction: 0.7, blendDuration: 0.7)) {
                                             if dragProgress > 0.25 {
                                                 dragProgress = 0.6
+                                                isExpanded = true
                                             } else {
                                                 dragProgress = .zero
+                                                isExpanded = false
                                             }
                                         }
                                     })
                             )
+                        /// If we Tap Other Than  Delete Button, It will Reset to Initial State
+                            .onTapGesture {
+                                withAnimation(.spring(response: 0.6, dampingFraction: 0.7, blendDuration: 0.7)) {
+                                    dragProgress = .zero
+                                    isExpanded = false
+                                }
+                            }
+                        
+                        /// Shadow
+                        Rectangle()
+                            .fill(.black)
+                            .padding(.vertical, 23)
+                            .shadow(color: .black.opacity(0.3), radius: 15, x: 30, y: 0)
+                        
+                        /// Moving Alomg Side While Dragging
+                            .padding(.trailing, rect.width * dragProgress)
+                            .mask(content)
+                        
+                        /// Disable Interaction
+                            .allowsHitTesting(false)
                         
                         content
                             .mask {
@@ -83,19 +112,9 @@ struct PeelEffect<Content: View>: View {
                         /// Disable Interaction
                             .allowsHitTesting(false)
                     }
-                    /// Shadow
-                    
-                    Rectangle()
-                        .fill(.black)
-                        .padding(.vertical, 23)
-                        .shadow(color: .black.opacity(0.3), radius: 15, x: 30, y: 0)
-                    
-                    /// Moving Alomg Side While Dragging
-                        .padding(.trailing, rect.width * dragProgress)
                 }
                 .overlay {
                     GeometryReader {
-                        let rect = $0.frame(in: .global)
                         let size = $0.size
                         let minOpacity = dragProgress / 0.5
                         let opacity = min(1, minOpacity)
@@ -139,19 +158,11 @@ struct PeelEffect<Content: View>: View {
                                 Rectangle()
                                     .offset(x: size.width * -dragProgress)
                             }
-                           
+                        
                     }
                     /// Disable Interaction
                     .allowsHitTesting(false)
                 }
-//            /// Background Shadow
-//                .background {
-//                    GeometryReader {
-//                        let rect = $0.frame(in: .global)
-//                    
-//                    }
-//                    .mask(content)
-//                }
         }
     }
 }
