@@ -51,6 +51,23 @@ struct PeelEffect<Content: View>: View {
                                     .fill(.white.opacity(0.25))
                                     .mask(content)
                             }
+                        /// Making is Glow At the Back Side
+                            .overlay(alignment: .trailing) {
+                                Rectangle()
+                                    .fill(
+                                        .linearGradient(colors: [
+                                            .clear,
+                                            .white,
+                                            .clear,
+                                            .clear
+                                        ], startPoint: .leading, endPoint: .trailing)
+                                    )
+                                    .frame(width: 60)
+                                    .offset(x: 40)
+                                /// Moving Alomg Side While Dragging
+                                    .offset(x: size.width * -dragProgress)
+
+                            }
                         
                         /// Flipping Horizontally for Upside Image
                             .scaleEffect(x: -1)
@@ -92,10 +109,11 @@ struct PeelEffect<Content: View>: View {
                         
                         Rectangle()
                             .fill(.black)
+                            .padding(.vertical, 23)
                             .shadow(color: .black.opacity(0.3), radius: 15, x: 30, y: 0)
                         
                         /// Moving Alomg Side While Dragging
-                            .padding(.tr)
+                            .padding(.trailing, rect.width * dragProgress)
                     }
                     .mask(content)
                 }
@@ -109,7 +127,7 @@ struct PeelEffect<Content: View>: View {
                                 .padding(.trailing, 20)
                                 .foregroundStyle(.white)
                         }
-                        .padding(8)
+                        .padding(.vertical, 8)
                 }
         }
     }
