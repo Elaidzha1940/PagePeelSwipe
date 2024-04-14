@@ -31,14 +31,20 @@ struct PeelEffect<Content: View>: View {
                 .overlay {
                     GeometryReader {
                         let rect = $0.frame(in: .global)
-                        let size = $0.size
+                        let minX = rect.minX
                         
                         /// Replace  it as Background View
                         RoundedRectangle(cornerRadius: 30, style: .continuous)
                             .fill(.red.gradient)
                             .overlay(alignment: .trailing) {
                                 Button {
-                                    onDelete()
+                                    /// Removing Card Completely
+                                    withAnimation(.spring(response: 0.6, dampingFraction: 0.7, blendDuration: 0.7)) {
+                                        dragProgress = 1
+                                    }
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                        onDelete()
+                                    }
                                 } label: {
                                     Image(systemName: "trash")
                                         .font(.system(size: 25, weight: .semibold, design: .rounded))
@@ -58,8 +64,10 @@ struct PeelEffect<Content: View>: View {
                                         
                                         /// Right to Left Swipe: Negative Value
                                         var translationX = value.translation.width
+                                        
                                         /// Limiting to Max Zero
                                         translationX = max(-translationX, 0)
+                                        
                                         /// Converting Translation Into Progress  (0 - 1)
                                         let progress = min(1, translationX / rect.width)
                                         dragProgress = progress
@@ -100,6 +108,7 @@ struct PeelEffect<Content: View>: View {
                         
                         /// Disable Interaction
                             .allowsHitTesting(false)
+                            .offset(x: dragProgress == 1 ? -minX : 0)
                         
                         content
                             .mask {
@@ -111,11 +120,13 @@ struct PeelEffect<Content: View>: View {
                             }
                         /// Disable Interaction
                             .allowsHitTesting(false)
+                            .offset(x: dragProgress == 1 ? -minX : 0)
                     }
                 }
                 .overlay {
                     GeometryReader {
                         let size = $0.size
+                        let minX = $0.frame(in: .global).minX
                         let minOpacity = dragProgress / 0.5
                         let opacity = min(1, minOpacity)
                         
@@ -145,7 +156,6 @@ struct PeelEffect<Content: View>: View {
                                 /// Moving Alomg Side While Dragging
                                     .offset(x: size.width * -dragProgress)
                             }
-                        
                         /// Flipping Horizontally for Upside Image
                             .scaleEffect(x: -1)
                         
@@ -158,7 +168,7 @@ struct PeelEffect<Content: View>: View {
                                 Rectangle()
                                     .offset(x: size.width * -dragProgress)
                             }
-                        
+                            .offset(x: dragProgress == 1 ? -minX : 0)
                     }
                     /// Disable Interaction
                     .allowsHitTesting(false)

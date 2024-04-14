@@ -20,7 +20,7 @@ struct Head: View {
                     PeelEffect {
                         CardView(image)
                     } onDelete: {
-                        print("delete \(images)")
+                        
                     }
                 }
             }
