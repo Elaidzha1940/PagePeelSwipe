@@ -1,9 +1,11 @@
+//  /*
 //
-//  InfoModel.swift
-//  PagePeelSwipe
+//  Project: PagePeelSwipe
+//  File: PosterType.swift
+//  Created by: Elaidzha Shchukin
+//  Date: 15.04.2024
 //
-//  Created by Elaidzha Shchukin on 14.04.2024.
-//
+//  */
 
 import SwiftUI
 

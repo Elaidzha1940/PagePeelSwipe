@@ -10,10 +10,23 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State var animate = false
+    
     var body: some View {
         NavigationStack {
-            Head()
-                .navigationTitle("Favorite Movies")
+            ZStack {
+                LinearGradient(colors: [.gray.opacity(0.5), .green.opacity(0.3)],
+                               startPoint: .topTrailing,
+                               endPoint: .bottomLeading)
+                .ignoresSafeArea()
+                
+                VStack {
+                    Search()
+                        .padding()
+                    Head()
+                }
+            }
+            .navigationTitle("Search Movies")
         }
     }
 }

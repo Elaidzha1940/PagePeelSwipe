@@ -1,11 +1,11 @@
-  /*
-
-  Project: PagePeelSwipe
-  File: Head.swift
-  Created by: Elaidzha Shchukin
-  Date: 12.04.2024
-
-  */
+/*
+ 
+ Project: PagePeelSwipe
+ File: Head.swift
+ Created by: Elaidzha Shchukin
+ Date: 12.04.2024
+ 
+ */
 
 import SwiftUI
 
@@ -54,7 +54,7 @@ struct Head: View {
                     .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
             }
         }
-        .frame(height: 250)
+        .frame(height: 200)
         .contentShape(Rectangle())
     }
 }
