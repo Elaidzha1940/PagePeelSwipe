@@ -1,6 +1,6 @@
 ### ⌨️ Page Peel Swipe
 
-## Elegant Swipe-to-Delete with a Page Curl Animation — Built with SwiftUI
+## Elegant Swipe-to-Delete with a Page Curl Animation - Built with SwiftUI
 Welcome to PagePeelSwipe, a SwiftUI experiment that takes swipe gestures to the next level with a beautiful and fluid page curl effect for item deletion.
 
 https://github.com/Elaidzha1940/PagePeelSwipe/assets/64445918/dd1a2165-6eca-43a3-a44b-196e43eab775
