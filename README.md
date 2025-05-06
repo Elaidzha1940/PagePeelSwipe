@@ -5,23 +5,23 @@ Welcome to PagePeelSwipe, a SwiftUI experiment that takes swipe gestures to the 
 
 https://github.com/Elaidzha1940/PagePeelSwipe/assets/64445918/dd1a2165-6eca-43a3-a44b-196e43eab775
 
-✨ Features
-Smooth and realistic page peel animation
+## Features
+- Smooth and realistic page peel animation
 
-Clean and modern SwiftUI implementation
+- Clean and modern SwiftUI implementation
 
-Easy to integrate and customize
+- Easy to integrate and customize
 
-Enhances UX with intuitive swipe-to-delete gestures
+- Enhances UX with intuitive swipe-to-delete gestures
 
-📱 Why Page Peel?
-Traditional swipe-to-delete interactions are functional—but they don’t have to be boring. This effect adds a touch of delight and polish, making your app feel more dynamic and engaging.
+## Why Page Peel?
+Traditional swipe-to-delete interactions are functional - but they don’t have to be boring. This effect adds a touch of delight and polish, making your app feel more dynamic and engaging.
 
-🔧 Built With
-SwiftUI
+## Built With
+- SwiftUI
 
-DragGesture
+- DragGesture
 
-Animations
+- Animations
 
-Custom Transitions
+- Custom Transitions
